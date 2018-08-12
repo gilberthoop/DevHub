@@ -7,14 +7,14 @@ const bcrypt = require("bcryptjs");
 const User = require("../../models/User");
 
 // @route   GET api/users/test
-// @dec     Test users route
+// @desc     Test users route
 // @access  Public
 router.get("/test", (req, res) =>
-  res.json({ message: "Hello world from USers API" })
+  res.json({ message: "Hello world from Users API" })
 );
 
 // @route   GET api/users/register
-// @dec     Register a user
+// @desc     Register a user
 // @access  Public
 router.post("/register", (req, res) => {
   User.findOne({ email: req.body.email }).then(user => {
@@ -45,6 +45,31 @@ router.post("/register", (req, res) => {
         });
       });
     }
+  });
+});
+
+// @route   GET api/users/login
+// @desc    Log in a user / Returning JWT Token
+// @access  Public
+router.post("/login", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  // Find user by email
+  User.findOne({ email }).then(user => {
+    // Check for user
+    if (!user) {
+      return res.status(404).json({ email: "User not found" });
+    }
+
+    // Check password
+    bcrypt.compare(password, user.password).then(isMatch => {
+      if (isMatch) {
+        res.json({ msg: "Login successful!" });
+      } else {
+        return res.status(400).json({ password: "Incorrect password!" });
+      }
+    });
   });
 });
 
