@@ -3,6 +3,9 @@ const router = express.Router();
 const mongoose = require("mongoose");
 const passport = require("passport");
 
+// Load validation
+const validateProfileInput = require("../../validation/profile");
+
 // Load Profile model
 const Profile = require("../../models/Profile");
 // Load User Profile
@@ -16,7 +19,9 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
     const errors = {};
+
     Profile.findOne({ user: req.user.id })
+      .populate("user", ["name", "avatar"])
       .then(profile => {
         if (!profile) {
           errors.noprofile = "There is no profile for this user";
@@ -35,7 +40,15 @@ router.post(
   "/",
   passport.authenticate("jwt", { session: false }),
   (req, res) => {
-    // Get fields
+    const { errors, isValid } = validateProfileInput(req.body);
+
+    // Check Validation
+    if (!isValid) {
+      //return error with 400 status
+      return res.status(400).json(errors);
+    }
+
+    // Get the fields
     const profileFields = {};
     profileFields.user = req.user.id;
     if (req.body.handle) profileFields.handle = req.body.handle;
@@ -54,10 +67,11 @@ router.post(
     profileFields.social = {};
     if (req.body.youtube) profileFields.social.youtube = req.body.youtube;
     if (req.body.twitter) profileFields.social.twitter = req.body.twitter;
-    if (req.body.facebook) profileFields.social.youtube = req.body.facebook;
+    if (req.body.facebook) profileFields.social.facebook = req.body.facebook;
     if (req.body.linkedin) profileFields.social.linkedin = req.body.linkedin;
     if (req.body.instagram) profileFields.social.instagram = req.body.instram;
 
+    // Search for the user
     Profile.findOne({ user: req.user.id }).then(profile => {
       if (profile) {
         // Update profile if it exists
@@ -68,21 +82,16 @@ router.post(
         ).then(profile => res.json(profile));
       } else {
         // Create profile otherwise
-
         // Check if handle already exists
-        Profile.findOne({ handle: profileFields.handle }).findOnethen(
-          profile => {
-            if (profile) {
-              errors.handle = "Handle already exists";
-              res.status(400).json(errors);
-            }
-
-            //Save profile
-            new Profile(profileFields)
-              .save()
-              .then(profile => res.json(profile));
+        Profile.findOne({ handle: profileFields.handle }).then(profile => {
+          if (profile) {
+            errors.handle = "Handle already exists";
+            res.status(400).json(errors);
           }
-        );
+
+          //Save profile
+          new Profile(profileFields).save().then(profile => res.json(profile));
+        });
       }
     });
   }
