@@ -77,7 +77,7 @@ router.delete(
             return res.status(401).json({ forbidden: "User not authorized." });
           }
 
-          // Delete
+          // Delete the post
           post.remove().then(() => res.json({ success: true }));
         })
         .catch(err =>
