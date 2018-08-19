@@ -20,8 +20,8 @@ router.get("/test", (req, res) =>
   res.json({ message: "Hello world from Users API" })
 );
 
-// @route   GET api/users/register
-// @desc     Register a user
+// @route   POST api/users/register
+// @desc    Register a user
 // @access  Public
 router.post("/register", (req, res) => {
   const { errors, isValid } = validateRegisterInput(req.body);
