@@ -11,14 +11,14 @@ const Profile = require("../../models/Profile");
 const validatePostInput = require("../../validation/post");
 
 // @route   GET api/posts/test
-// @dec     Test posts route
+// @desc     Test posts route
 // @access  Public
 router.get("/test", (req, res) =>
   res.json({ message: "Hello world from Posts API" })
 );
 
 // @route   GET api/posts
-// @dec     Get posts
+// @desc     Get posts
 // @access  Public
 router.get("/", (req, res) => {
   Post.find()
@@ -28,7 +28,7 @@ router.get("/", (req, res) => {
 });
 
 // @route   GET api/posts/:id
-// @dec     Get a post by id
+// @desc     Get a post by id
 // @access  Public
 router.get("/:id", (req, res) => {
   Post.findById(req.params.id)
@@ -37,7 +37,7 @@ router.get("/:id", (req, res) => {
 });
 
 // @route   POST api/posts
-// @dec     Create posts
+// @desc     Create posts
 // @access  Private
 router.post(
   "/",
@@ -63,7 +63,7 @@ router.post(
 );
 
 // @route   DELETE api/posts/:id
-// @dec     Delete a post
+// @desc     Delete a post
 // @access  Private
 router.delete(
   "/:id",
@@ -79,6 +79,44 @@ router.delete(
 
           // Delete the post
           post.remove().then(() => res.json({ success: true }));
+        })
+        .catch(err =>
+          res.status(404).json({ postnotfound: "Post does not exist" })
+        );
+    });
+  }
+);
+
+// @route   POST api/posts/like/:id
+// @desc    Like or unlike a post
+// @access  Private
+router.post(
+  "/like/:id",
+  passport.authenticate("jwt", { session: false }),
+  (req, res) => {
+    Profile.findOne({ user: req.user.id }).then(profile => {
+      Post.findById(req.params.id)
+        .then(post => {
+          // If the user has not liked the post, like the post
+          if (
+            post.likes.filter(like => like.user.toString() === req.user.id)
+              .length === 0
+          ) {
+            // Add the user id to the likes array
+            post.likes.unshift({ user: req.user.id });
+          }
+          // Else unlike the post
+          else {
+            // Get the remove index
+            const removeIndex = post.likes
+              .map(item => item.user.toString())
+              .indexOf(req.user.id);
+
+            // Splice the like from array
+            post.likes.splice(removeIndex, 1);
+          }
+
+          post.save().then(post => res.json(post));
         })
         .catch(err =>
           res.status(404).json({ postnotfound: "Post does not exist" })
