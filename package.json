@@ -1,5 +1,5 @@
 {
-  "name": "devconnector",
+  "name": "devhub",
   "version": "1.0.0",
   "description": "A social media app for developers",
   "main": "server.js",
