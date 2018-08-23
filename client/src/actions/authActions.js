@@ -17,7 +17,7 @@ export const registerUser = (userData, history) => dispatch => {
 };
 
 // Login - Get user token - an Action Creator
-export const loginuser = userData => dispatch => {
+export const loginUser = userData => dispatch => {
   axios
     .post("/api/users/login", userData)
     .then(res => {
@@ -30,7 +30,7 @@ export const loginuser = userData => dispatch => {
       // Decode the token to get user data
       const decoded = jwt_decode(token);
       // Set current user
-      dispatch(setCurrentUser(decode));
+      dispatch(setCurrentUser(decoded));
     })
     .catch(err =>
       dispatch({
