@@ -26,7 +26,7 @@ const TextFieldGroup = ({
         onChange={onChange}
         disabled={disabled}
       />
-      {info && <small class="form-text text-muted">{info}</small>}
+      {info && <small className="form-text text-muted">{info}</small>}
       {error && <div className="invalid-feedback">{error}</div>}
     </div>
   );
@@ -44,7 +44,7 @@ TextFieldGroup.propTypes = {
 };
 
 TextFieldGroup.defaultProps = {
-  text: "text"
+  type: "text"
 };
 
 export default TextFieldGroup;
