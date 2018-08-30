@@ -32,6 +32,8 @@ class ProfileGithub extends Component {
 
   render() {
     const { repos } = this.state;
+    const { username } = this.props;
+    const repoLink = `https://github.com/${username}?tab=repositories`;
 
     const repoItems = repos.map(repo => (
       <div key={repo.id} className="card card-body mb-2">
@@ -62,6 +64,12 @@ class ProfileGithub extends Component {
       <div ref="myRef">
         <hr />
         <h3 className="mb-4">Latest Github Repos</h3>
+        <p>
+          The complete list of Github repositories can be found{" "}
+          <a href={repoLink} target="_blank">
+            here.
+          </a>
+        </p>
         {repoItems}
       </div>
     );

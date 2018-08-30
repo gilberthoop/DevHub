@@ -202,12 +202,11 @@ export class EditProfile extends Component {
                   error={errors.handle}
                   info="A unique handle for your profile URL."
                 />
-                <SelectListGroup
+                <TextFieldGroup
                   placeholder="Status"
                   name="status"
                   value={this.state.status}
                   onChange={this.onChange}
-                  options={options}
                   error={errors.status}
                   info=""
                 />
