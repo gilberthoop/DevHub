@@ -150,12 +150,13 @@ export class CreateProfile extends Component {
                   error={errors.handle}
                   info="A unique handle for your profile URL."
                 />
-                <SelectListGroup
+                {/* <SelectListGroup */}
+                <TextFieldGroup
                   placeholder="Status"
                   name="status"
                   value={this.state.status}
                   onChange={this.onChange}
-                  options={options}
+                  // options={options}
                   error={errors.status}
                   info=""
                 />
