@@ -75,7 +75,7 @@ export class CreateProfile extends Component {
         <div>
           <InputGroup
             placeholder="Twitter Profile URL"
-            name="Twitter"
+            name="twitter"
             icon="fab fa-twitter"
             value={this.state.twitter}
             onChange={this.onChange}
