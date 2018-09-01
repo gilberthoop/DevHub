@@ -121,16 +121,6 @@ export class CreateProfile extends Component {
       );
     }
 
-    // Select options for status
-    const options = [
-      { label: "Select Professional Status", value: 0 },
-      { label: "Developer", value: "Developer" },
-      { label: "Manager", value: "Manager" },
-      { label: "Student", value: "Student" },
-      { label: "Instructor", value: "Instructor" },
-      { label: "Other", value: "Other" }
-    ];
-
     return (
       <div className="create-profile">
         <div className="container">
